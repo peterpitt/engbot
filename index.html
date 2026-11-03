@@ -264,7 +264,7 @@ function flatten(){
 /* ---- Day 選單 ---- */
 const daySel=document.getElementById('daySel');
 DAYS.forEach((d,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=`Day ${d.day}　${d.title}`; daySel.appendChild(o); });
-daySel.onchange=()=>{ curDay=+daySel.value; stopAll(); dIdx=0; loadDay(); };
+daySel.onchange=()=>{ curDay=+daySel.value; stopAll(); playSession++; dIdx=0; loadDay(); };
 
 function loadDay(){
   const d=DAYS[curDay]; flatten();
@@ -286,8 +286,9 @@ if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pi
 else { document.getElementById('ttsWarn').style.display='flex'; }
 
 let activeQueue=0;
+let playSession=0;   // 跟讀迴圈的 session（不受 playShadow 內部 stopAll 影響）
 function stopAll(){ activeQueue++; try{speechSynthesis.cancel();}catch(e){} }
-document.getElementById('stopBtn').onclick=()=>{stopAll(); resetDrillBtn();};
+document.getElementById('stopBtn').onclick=()=>{stopAll(); playSession++; resetDrillBtn();};
 
 function utter(text,rate){ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate; u.pitch=1; if(enVoice)u.voice=enVoice; return u; }
 function playOnce(text){ stopAll(); try{speechSynthesis.speak(utter(text,1));}catch(e){} }
@@ -310,7 +311,7 @@ function playShadow(text,onStep,onDone){
 
 /* ========== 分頁 ========== */
 const tabs=document.getElementById('tabs');
-tabs.addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(!b)return; stopAll();
+tabs.addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(!b)return; stopAll(); playSession++;
   [...tabs.children].forEach(t=>t.classList.toggle('active',t===b));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
   document.getElementById('p-'+b.dataset.t).classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); });
@@ -349,25 +350,26 @@ function renderScene(){
     const c=document.createElement('div'); c.className='card';
     c.innerHTML=`<div class="scn-title" style="margin-bottom:6px"><span class="scn-emoji" style="background:${s.color}">${s.emoji}</span>
       <span>${s.name} <span class="small" style="font-weight:600">· ${s.cn}</span></span></div>
-      <p class="small" style="margin:0 0 10px">${s.words.length} 句例句</p>
-      <div class="row"><button class="btn ghost bprev">🔊 整段聽一次</button><button class="btn bshadow">🎯 整段變速跟讀</button></div>
+      <p class="small" style="margin:0 0 10px">3 句例句</p>
+      <div class="row"><button class="btn ghost bprev">🔊 3 句聽一次</button><button class="btn bshadow">🎯 3 句變速跟讀</button></div>
       <div class="small" style="margin-top:8px;display:none" data-prog></div>`;
     const prog=c.querySelector('[data-prog]');
-    c.querySelector('.bprev').onclick=()=>playList(s.words.map(w=>w.e),prog,false);
-    c.querySelector('.bshadow').onclick=()=>playList(s.words.map(w=>w.e),prog,true);
+    const sents=s.words.slice(0,3).map(w=>w.e);
+    c.querySelector('.bprev').onclick=()=>playList(sents,prog,false);
+    c.querySelector('.bshadow').onclick=()=>playList(sents,prog,true);
     box.appendChild(c);
   });
 }
 function playList(texts,progEl,shadow){
-  stopAll(); const myId=activeQueue; let idx=0; progEl.style.display='block';
+  stopAll(); const mine=++playSession; let idx=0; progEl.style.display='block';
   function nextS(){
-    if(myId!==activeQueue){progEl.style.display='none';return;}
+    if(mine!==playSession){progEl.style.display='none';return;}
     if(idx>=texts.length){progEl.textContent='✅ 跟讀完成！';return;}
     progEl.textContent=`播放中… 第 ${idx+1} / ${texts.length} 句`;
-    if(shadow){ playShadow(texts[idx],(i,t,r)=>{if(r)progEl.textContent=`第 ${idx+1}/${texts.length} 句　${r}×　(${i+1}/${t})`;},
-        ()=>{ if(myId!==activeQueue)return; idx++; setTimeout(nextS,350); }); }
-    else { const u=utter(texts[idx],1); u.onend=()=>{if(myId!==activeQueue)return;idx++;setTimeout(nextS,300);};
-        u.onerror=()=>{if(myId!==activeQueue)return;idx++;setTimeout(nextS,150);}; try{speechSynthesis.speak(u);}catch(e){idx++;setTimeout(nextS,150);} }
+    if(shadow){ playShadow(texts[idx],(i,t,r)=>{if(r&&mine===playSession)progEl.textContent=`第 ${idx+1}/${texts.length} 句　${r}×　(${i+1}/${t})`;},
+        ()=>{ if(mine!==playSession)return; idx++; setTimeout(nextS,350); }); }
+    else { const u=utter(texts[idx],1); u.onend=()=>{if(mine!==playSession)return;idx++;setTimeout(nextS,300);};
+        u.onerror=()=>{if(mine!==playSession)return;idx++;setTimeout(nextS,150);}; try{speechSynthesis.speak(u);}catch(e){idx++;setTimeout(nextS,150);} }
   }
   nextS();
 }
@@ -398,22 +400,24 @@ function renderDrill(){ const w=ALL[dIdx]; if(!w)return;
   } else { list.style.display='none'; }
   buildDots(); resetDrillBtn(); }
 function playDrill(){ const w=ALL[dIdx]; const btn=document.getElementById('dPlay'); btn.disabled=true;
+  const mine=++playSession;
   if(dMode==='word'){ btn.textContent='🔊 播放中…';
-    playShadow(w.w,i=>setDots(i),()=>{ setDots(-1); btn.textContent='▶ 再播一次（1× → 1.5×3 → 2×3）'; btn.disabled=false;
+    playShadow(w.w,i=>setDots(i),()=>{ if(mine!==playSession)return; setDots(-1); btn.textContent='▶ 再播一次（1× → 1.5×3 → 2×3）'; btn.disabled=false;
       if(dAuto&&dIdx<ALL.length-1){dIdx++;renderDrill();setTimeout(playDrill,500);} }); return; }
   const exs=getExamples(w), list=document.getElementById('dExList'); let si=0;
   (function playOne(){
+    if(mine!==playSession)return;
     if(si>=exs.length){ [...list.children].forEach(r=>r.classList.remove('cur')); setDots(-1);
       btn.textContent='▶ 再播一次（5 句）'; btn.disabled=false;
       if(dAuto&&dIdx<ALL.length-1){dIdx++;renderDrill();setTimeout(playDrill,600);} return; }
     [...list.children].forEach((r,ix)=>r.classList.toggle('cur',ix===si));
     btn.textContent=`🔊 第 ${si+1}/${exs.length} 句…`;
-    playShadow(exs[si].e,i=>setDots(i),()=>{ si++; setTimeout(playOne,350); });
+    playShadow(exs[si].e,i=>setDots(i),()=>{ if(mine!==playSession)return; si++; setTimeout(playOne,350); });
   })(); }
 function gotoDrill(i){ dIdx=Math.max(0,i); document.querySelector('.tab[data-t="drill"]').click(); renderDrill(); setTimeout(playDrill,250); }
 document.getElementById('dPlay').onclick=playDrill;
-document.getElementById('dPrev').onclick=()=>{stopAll();dIdx=(dIdx-1+ALL.length)%ALL.length;renderDrill();};
-document.getElementById('dNext').onclick=()=>{stopAll();dIdx=(dIdx+1)%ALL.length;renderDrill();};
+document.getElementById('dPrev').onclick=()=>{stopAll();playSession++;dIdx=(dIdx-1+ALL.length)%ALL.length;renderDrill();};
+document.getElementById('dNext').onclick=()=>{stopAll();playSession++;dIdx=(dIdx+1)%ALL.length;renderDrill();};
 document.getElementById('dAuto').onclick=e=>{dAuto=!dAuto;e.target.textContent='自動連播：'+(dAuto?'開':'關');e.target.classList.toggle('on',dAuto);};
 document.querySelectorAll('#p-drill .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#p-drill .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');dMode=c.dataset.m;renderDrill();});
 
