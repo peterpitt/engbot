@@ -116,6 +116,12 @@
   .counter{font-size:12px;color:var(--muted);margin-top:6px}
   .nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
   .nav .btn{flex:1}
+  #dExList{text-align:left;margin:4px 0 12px}
+  .exrow{display:flex;gap:9px;align-items:flex-start;padding:9px 8px;border-bottom:1px dashed var(--line);border-radius:10px;transition:.12s}
+  .exrow.cur{background:var(--card2);box-shadow:0 0 0 2px rgba(37,99,235,.25) inset}
+  .exrow .extx{flex:1;min-width:0}
+  .exrow .exen{font-size:16px;font-weight:700;line-height:1.4}
+  .exrow .exzh{font-size:12px;color:var(--muted);margin-top:1px}
 
   .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
   .q .qq{font-weight:800;margin-bottom:10px;font-size:15px}
@@ -207,6 +213,7 @@
         <div class="bigmean" id="dMean"></div>
         <div class="bigex" id="dEx" style="display:none"></div>
         <div class="bigexc" id="dExc" style="display:none"></div>
+        <div id="dExList" style="display:none"></div>
         <div class="counter" id="dCount"></div>
         <div class="speedrow" style="justify-content:center" id="dDots"></div>
         <button class="btn lg block" id="dPlay">▶ 開始跟讀（1× → 1.5×3 → 2×3）</button>
@@ -216,7 +223,7 @@
           <button class="btn ghost" id="dNext">下一個 →</button>
         </div>
       </div>
-      <div class="note tip"><span class="ico">🎧</span><span>一句播完共 <b>7 次</b>（1×一次、1.5×三次、2×三次）。1× 時專心聽，1.5× 開始小聲跟，2× 大聲完整跟讀。</span></div>
+      <div class="note tip"><span class="ico">🎧</span><span><b>練單字</b>：一個字播 7 次（1×一次、1.5×三次、2×三次）。<b>練例句</b>：依序跟讀 <b>5 句</b>同情境例句（以該字本身的例句開頭），每句都跑完整變速。1× 專心聽，1.5× 小聲跟，2× 大聲完整跟讀。</span></div>
       <div class="note warn" id="ttsWarn" style="display:none"><span class="ico">⚠️</span><span>這個瀏覽器可能沒有英文語音。建議用 <b>Chrome</b> 或 <b>Safari</b> 開啟。</span></div>
     </section>
 
@@ -280,7 +287,7 @@ else { document.getElementById('ttsWarn').style.display='flex'; }
 
 let activeQueue=0;
 function stopAll(){ activeQueue++; try{speechSynthesis.cancel();}catch(e){} }
-document.getElementById('stopBtn').onclick=stopAll;
+document.getElementById('stopBtn').onclick=()=>{stopAll(); resetDrillBtn();};
 
 function utter(text,rate){ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate; u.pitch=1; if(enVoice)u.voice=enVoice; return u; }
 function playOnce(text){ stopAll(); try{speechSynthesis.speak(utter(text,1));}catch(e){} }
@@ -373,14 +380,36 @@ function buildDots(){ dEls.dots.innerHTML='';
   SPEED_PLAN.forEach(p=>{ const g=document.createElement('div'); g.className='spgrp'; g.innerHTML=`<span class="splab">${p.rate}×</span>`;
     for(let i=0;i<p.reps;i++){const d=document.createElement('span');d.className='dot';g.appendChild(d);} dEls.dots.appendChild(g); }); }
 function setDots(a){ dEls.dots.querySelectorAll('.dot').forEach((d,i)=>{ d.classList.remove('on','done'); if(a<0){}else if(i<a)d.classList.add('done');else if(i===a)d.classList.add('on'); }); }
+// 取該單字的 5 句同情境例句（以該字自己的例句開頭，再接同主題 4 句）
+function getExamples(w){ const ws=DAYS[curDay].scenarios[w.si].words, n=ws.length, out=[];
+  const cnt=Math.min(5,n); for(let k=0;k<cnt;k++){ const it=ws[(w.wi+k)%n]; out.push({e:it.e,ec:it.ec}); } return out; }
+function resetDrillBtn(){ const btn=document.getElementById('dPlay'); if(!btn)return; btn.disabled=false;
+  btn.textContent = dMode==='ex' ? '▶ 開始跟讀（5 句 · 每句 1×→1.5×3→2×3）' : '▶ 開始跟讀（1× → 1.5×3 → 2×3）';
+  const list=document.getElementById('dExList'); if(list)[...list.children].forEach(r=>r.classList.remove('cur')); setDots(-1); }
 function renderDrill(){ const w=ALL[dIdx]; if(!w)return;
   dEls.jp.textContent=w.w; dEls.mean.textContent=w.m;
-  const showEx=dMode==='ex'; dEls.ex.style.display=showEx?'block':'none'; dEls.exc.style.display=showEx?'block':'none';
-  dEls.ex.textContent=w.e; dEls.exc.textContent=w.ec; dEls.count.textContent=`${w.scnCn}　${dIdx+1} / ${ALL.length}`; buildDots(); }
-function playDrill(){ const w=ALL[dIdx]; const text=dMode==='ex'?w.e:w.w;
-  const btn=document.getElementById('dPlay'); btn.textContent='🔊 播放中…'; btn.disabled=true;
-  playShadow(text,i=>setDots(i),()=>{ setDots(-1); btn.textContent='▶ 再播一次（1×→1.5×3→2×3）'; btn.disabled=false;
-    if(dAuto&&dIdx<ALL.length-1){dIdx++;renderDrill();setTimeout(playDrill,500);} }); }
+  dEls.count.textContent=`${w.scnCn}　${dIdx+1} / ${ALL.length}`;
+  dEls.ex.style.display='none'; dEls.exc.style.display='none';
+  const list=document.getElementById('dExList');
+  if(dMode==='ex'){ list.style.display='block'; list.innerHTML='';
+    getExamples(w).forEach((s,i)=>{ const row=document.createElement('div'); row.className='exrow';
+      row.innerHTML=`<button class="mini">🔊</button><div class="extx"><div class="exen">${i+1}. ${s.e}</div><div class="exzh">${s.ec}</div></div>`;
+      row.querySelector('.mini').onclick=()=>playOnce(s.e); list.appendChild(row); });
+  } else { list.style.display='none'; }
+  buildDots(); resetDrillBtn(); }
+function playDrill(){ const w=ALL[dIdx]; const btn=document.getElementById('dPlay'); btn.disabled=true;
+  if(dMode==='word'){ btn.textContent='🔊 播放中…';
+    playShadow(w.w,i=>setDots(i),()=>{ setDots(-1); btn.textContent='▶ 再播一次（1× → 1.5×3 → 2×3）'; btn.disabled=false;
+      if(dAuto&&dIdx<ALL.length-1){dIdx++;renderDrill();setTimeout(playDrill,500);} }); return; }
+  const exs=getExamples(w), list=document.getElementById('dExList'); let si=0;
+  (function playOne(){
+    if(si>=exs.length){ [...list.children].forEach(r=>r.classList.remove('cur')); setDots(-1);
+      btn.textContent='▶ 再播一次（5 句）'; btn.disabled=false;
+      if(dAuto&&dIdx<ALL.length-1){dIdx++;renderDrill();setTimeout(playDrill,600);} return; }
+    [...list.children].forEach((r,ix)=>r.classList.toggle('cur',ix===si));
+    btn.textContent=`🔊 第 ${si+1}/${exs.length} 句…`;
+    playShadow(exs[si].e,i=>setDots(i),()=>{ si++; setTimeout(playOne,350); });
+  })(); }
 function gotoDrill(i){ dIdx=Math.max(0,i); document.querySelector('.tab[data-t="drill"]').click(); renderDrill(); setTimeout(playDrill,250); }
 document.getElementById('dPlay').onclick=playDrill;
 document.getElementById('dPrev').onclick=()=>{stopAll();dIdx=(dIdx-1+ALL.length)%ALL.length;renderDrill();};
