@@ -3,43 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>日劇單字速記</title>
-<meta name="description" content="一邊追日劇一邊記單字：每天 200 字、情境分類、1×→1.5×→2× 跟讀速度訓練。">
+<title>英語單字速記</title>
+<meta name="description" content="一邊追美劇一邊背單字：20 天、每天 200 個情境單字，搭配 1×→1.5×→2× 變速跟讀聽力訓練。">
 <style>
   :root{
-    --bg:#fff7ef; --bg2:#ffffff; --ink:#1f2430; --muted:#6b7280; --line:#eadfce;
-    --card:#ffffff; --card2:#fbf4ea; --shadow:0 10px 30px rgba(31,36,48,.08);
-    --brand:#f97316; --brand2:#fb923c; --accent:#0ea5e9; --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
-    --pill:#fff2e2; --radius:18px;
-    --f=-apple-system:;
+    --bg:#eef4ff; --bg2:#ffffff; --ink:#1c2230; --muted:#64708a; --line:#dde6f5;
+    --card:#ffffff; --card2:#f2f6ff; --shadow:0 10px 30px rgba(28,34,48,.08);
+    --brand:#2563eb; --brand2:#3b82f6; --accent:#f59e0b; --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
+    --pill:#e4edff; --radius:18px;
   }
-  :root:not([data-theme="light"]){ }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#14161c; --bg2:#1a1d25; --ink:#eef1f6; --muted:#9aa3b2; --line:#2a2f3a;
-      --card:#1c2029; --card2:#222733; --shadow:0 10px 30px rgba(0,0,0,.35);
-      --pill:#2a2112;
+      --bg:#121620; --bg2:#171c28; --ink:#eef1f6; --muted:#97a2b8; --line:#283246;
+      --card:#1a2130; --card2:#202a3d; --shadow:0 10px 30px rgba(0,0,0,.35); --pill:#1b2740;
     }
   }
   :root[data-theme="dark"]{
-    --bg:#14161c; --bg2:#1a1d25; --ink:#eef1f6; --muted:#9aa3b2; --line:#2a2f3a;
-    --card:#1c2029; --card2:#222733; --shadow:0 10px 30px rgba(0,0,0,.35); --pill:#2a2112;
+    --bg:#121620; --bg2:#171c28; --ink:#eef1f6; --muted:#97a2b8; --line:#283246;
+    --card:#1a2130; --card2:#202a3d; --shadow:0 10px 30px rgba(0,0,0,.35); --pill:#1b2740;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Hiragino Sans",Meiryo,sans-serif;
-    line-height:1.6; -webkit-font-smoothing:antialiased;
-  }
+  body{background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",sans-serif;}
   .wrap{max-width:720px;margin:0 auto;min-height:100vh;background:var(--bg)}
 
-  /* ---- Hero ---- */
-  .hero{position:relative;overflow:hidden;padding:26px 16px 18px;background:
-     radial-gradient(120% 120% at 100% 0%, #ffe6cf 0%, var(--bg) 60%);}
-  @media (prefers-color-scheme:dark){.hero:not([data-l]){background:radial-gradient(120% 120% at 100% 0%, #2a211400 0%, var(--bg) 60%)}}
-  .ghost{position:absolute;right:6px;top:36px;font-size:150px;font-weight:900;line-height:1;
-     color:var(--brand);opacity:.08;pointer-events:none;user-select:none}
+  .hero{position:relative;overflow:hidden;padding:26px 16px 18px;background:radial-gradient(120% 120% at 100% 0%, #d7e6ff 0%, var(--bg) 60%);}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero{background:radial-gradient(120% 120% at 100% 0%, #1a2740 0%, var(--bg) 62%)}}
+  .ghost{position:absolute;right:10px;top:22px;font-size:170px;font-weight:900;line-height:1;color:var(--brand);opacity:.08;pointer-events:none;user-select:none;font-style:italic}
   .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
   .tag{font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--brand);color:#fff}
   .tag.b{background:var(--accent)}
@@ -47,29 +38,26 @@
   h1.title .hl{color:var(--brand)}
   h1.title .hl2{color:var(--accent)}
   .sub{color:var(--muted);font-size:14px;margin:0}
-  .pbar{margin-top:14px;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
-  .pbar>i{display:block;height:100%;width:5%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--accent))}
+  .daysel{margin-top:14px;display:flex;align-items:center;gap:10px}
+  .daysel select{font-size:14px;font-weight:800;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .pbar{margin-top:12px;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+  .pbar>i{display:block;height:100%;width:5%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .3s}
   .pmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
 
-  /* ---- Tabs ---- */
-  .tabs{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;gap:6px;overflow-x:auto;
-     padding:10px 12px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:10px 12px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .tabs::-webkit-scrollbar{display:none}
-  .tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);
-     font-size:13px;font-weight:700;padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.15s}
+  .tab{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:13px;font-weight:700;padding:8px 13px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:.15s}
   .tab.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:var(--shadow)}
 
-  /* ---- Panels ---- */
   main{padding:16px 14px 90px}
   .panel{display:none;animation:fade .25s ease}
   .panel.show{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   h2.sec{font-size:19px;font-weight:900;margin:4px 0 12px}
-  h3.sub2{font-size:15px;font-weight:800;margin:20px 0 8px;color:var(--ink)}
+  h3.sub2{font-size:15px;font-weight:800;margin:20px 0 8px}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  @media(max-width:480px){.grid2{grid-template-columns:1fr 1fr}}
   .gc{border-radius:14px;padding:13px;color:#fff}
   .gc b{display:block;font-size:14px;margin-bottom:3px}
   .gc span{font-size:12px;opacity:.92;line-height:1.5}
@@ -77,66 +65,58 @@
   .note .ico{font-size:17px;line-height:1.4}
   .note.warn{background:#fff4e0;border-left:4px solid var(--warn);color:#7a5600}
   .note.tip{background:#e7f8ef;border-left:4px solid var(--good);color:#116141}
-  .note.blue{background:#e6f3fd;border-left:4px solid var(--accent);color:#0b4f78}
+  .note.blue{background:#e4edff;border-left:4px solid var(--brand);color:#1e3f8a}
   @media (prefers-color-scheme:dark){
     :root:not([data-theme="light"]) .note.warn{background:#2a2110;color:#f3cf8f}
     :root:not([data-theme="light"]) .note.tip{background:#122a1f;color:#8fe3bc}
-    :root:not([data-theme="light"]) .note.blue{background:#0f2636;color:#8fcdf3}
+    :root:not([data-theme="light"]) .note.blue{background:#121f3a;color:#9dbcf5}
   }
 
-  /* speed dots */
   .speedrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:10px 0}
   .spgrp{display:flex;align-items:center;gap:6px}
   .splab{font-size:12px;font-weight:800;color:var(--muted);min-width:34px}
   .dot{width:12px;height:12px;border-radius:50%;background:var(--line);transition:.15s}
-  .dot.on{background:var(--brand);box-shadow:0 0 0 4px rgba(249,115,22,.18)}
+  .dot.on{background:var(--brand);box-shadow:0 0 0 4px rgba(37,99,235,.18)}
   .dot.done{background:var(--brand2);opacity:.5}
 
-  .btn{border:none;cursor:pointer;font-weight:800;border-radius:12px;padding:11px 16px;font-size:14px;
-     background:var(--brand);color:#fff;box-shadow:var(--shadow)}
+  .btn{border:none;cursor:pointer;font-weight:800;border-radius:12px;padding:11px 16px;font-size:14px;background:var(--brand);color:#fff;box-shadow:var(--shadow)}
   .btn.lg{padding:15px 22px;font-size:16px;border-radius:14px}
   .btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line);box-shadow:none}
   .btn.block{width:100%}
   .btn:disabled{opacity:.5;cursor:default}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
-  /* word list */
   .scn-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:22px 0 10px;cursor:pointer}
   .scn-title{display:flex;align-items:center;gap:9px;font-weight:900;font-size:15px}
-  .scn-emoji{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#fff}
-  .scn-count{font-size:12px;color:var(--muted);font-weight:700}
+  .scn-emoji{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:18px;color:#fff;flex:0 0 auto}
+  .scn-count{font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap}
   .wlist{display:flex;flex-direction:column;gap:8px}
   .word{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 12px;display:flex;gap:10px;align-items:flex-start}
   .word .main{flex:1;min-width:0}
-  .jp{font-size:18px;font-weight:800;letter-spacing:.3px}
-  .kr{font-size:12px;color:var(--muted);margin-top:1px}
-  .mean{font-size:13.5px;margin-top:3px}
-  .ex{font-size:13px;color:var(--ink);margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+  .en{font-size:18px;font-weight:800;letter-spacing:.2px}
+  .mean{font-size:13.5px;margin-top:2px}
+  .ex{font-size:13px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
   .exc{font-size:12px;color:var(--muted);margin-top:2px}
-  .pbtns{display:flex;flex-direction:column;gap:6px}
-  .mini{border:none;cursor:pointer;width:38px;height:34px;border-radius:10px;font-size:15px;
-     background:var(--pill);color:var(--brand);font-weight:800}
+  .pbtns{display:flex;flex-direction:column;gap:6px;flex:0 0 auto}
+  .mini{border:none;cursor:pointer;width:38px;height:34px;border-radius:10px;font-size:15px;background:var(--pill);color:var(--brand);font-weight:800}
   .mini.go{background:var(--brand);color:#fff}
-  .hide-cn .mean,.hide-cn .exc{filter:blur(5px);transition:.1s}
+  .hide-cn .mean,.hide-cn .exc{filter:blur(5px)}
   .hide-cn .mean:active,.hide-cn .exc:active{filter:none}
 
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
   .chip{font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 12px;cursor:pointer}
   .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
-  /* practice */
-  .stage{background:linear-gradient(160deg,#fff,#fdf1e4);border:1px solid var(--line);border-radius:22px;padding:22px 18px;text-align:center;box-shadow:var(--shadow)}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stage{background:linear-gradient(160deg,#20242e,#191c24)}}
-  .stage .bigjp{font-size:34px;font-weight:900;margin:4px 0 2px}
-  .stage .bigkr{color:var(--muted);font-size:14px}
-  .stage .bigmean{font-size:16px;margin-top:8px;font-weight:700}
+  .stage{background:linear-gradient(160deg,#fff,#e9f1ff);border:1px solid var(--line);border-radius:22px;padding:22px 18px;text-align:center;box-shadow:var(--shadow)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stage{background:linear-gradient(160deg,#1e2636,#171f30)}}
+  .stage .bigjp{font-size:32px;font-weight:900;margin:4px 0 2px}
+  .stage .bigmean{font-size:16px;margin-top:6px;font-weight:700}
   .stage .bigex{margin-top:14px;font-size:20px;font-weight:700;line-height:1.5}
   .stage .bigexc{color:var(--muted);font-size:13.5px;margin-top:4px}
-  .counter{font-size:12px;color:var(--muted);margin-top:4px}
+  .counter{font-size:12px;color:var(--muted);margin-top:6px}
   .nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
   .nav .btn{flex:1}
 
-  /* quiz */
   .q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
   .q .qq{font-weight:800;margin-bottom:10px;font-size:15px}
   .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -145,29 +125,28 @@
   .opt.wrong{background:#fdeaea;border-color:var(--bad);color:#9a2020}
   .scorebox{text-align:center;font-weight:900;font-size:20px;margin:6px 0 14px}
 
-  .foot{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-top:1px solid var(--line);
-     padding:9px 12px;display:flex;justify-content:center;gap:10px;z-index:30}
+  .foot{position:fixed;left:0;right:0;bottom:0;background:var(--bg2);border-top:1px solid var(--line);padding:9px 12px;display:flex;justify-content:center;gap:10px;z-index:30}
   .foot .btn{box-shadow:none}
   .small{font-size:12px;color:var(--muted)}
-  .themebtn{position:absolute;right:14px;top:14px;border:1px solid var(--line);background:var(--card);
-     border-radius:999px;width:36px;height:36px;font-size:16px;cursor:pointer;z-index:5}
+  .themebtn{position:absolute;right:14px;top:14px;border:1px solid var(--line);background:var(--card);border-radius:999px;width:36px;height:36px;font-size:16px;cursor:pointer;z-index:5}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <!-- HERO -->
   <header class="hero">
     <button class="themebtn" id="themeBtn" title="切換深/淺色">🌙</button>
-    <div class="ghost">単</div>
-    <div class="tags"><span class="tag">聽力訓練</span><span class="tag b">日劇單字</span></div>
-    <h1 class="title">一邊追<span class="hl">日劇</span><br>一邊速記<span class="hl2">單字</span></h1>
-    <p class="sub">每天一小時・200 個情境單字・1×→1.5×→2× 跟讀訓練</p>
+    <div class="ghost">Aa</div>
+    <div class="tags"><span class="tag">英語學習</span><span class="tag b">每日單字</span></div>
+    <h1 class="title">一邊追<span class="hl">美劇</span><br>一邊背<span class="hl2">單字</span></h1>
+    <p class="sub">20 天課程・每天 200 個情境單字・1×→1.5×→2× 變速跟讀</p>
+    <div class="daysel">
+      <span class="small" style="font-weight:800">選擇天數：</span>
+      <select id="daySel"></select>
+    </div>
     <div class="pbar"><i id="heroBar"></i></div>
-    <div class="pmeta"><span id="heroDay">Day 1 / 共 1 天</span><span id="heroCount">200 字</span></div>
+    <div class="pmeta"><span id="heroDay">Day 1</span><span id="heroCount">200 字</span></div>
   </header>
 
-  <!-- TABS -->
   <nav class="tabs" id="tabs">
     <button class="tab active" data-t="overview">💡 為什麼這樣學</button>
     <button class="tab" data-t="words">📒 今日單字</button>
@@ -178,14 +157,13 @@
   </nav>
 
   <main>
-    <!-- OVERVIEW -->
     <section class="panel show" id="p-overview">
-      <h2 class="sec">為什麼「日劇＋速度跟讀」最有效？</h2>
+      <h2 class="sec">為什麼「情境單字＋變速跟讀」最有效？</h2>
       <div class="grid2">
-        <div class="gc" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8)"><b>🗣️ 真實語速</b><span>日劇是母語者自然語速，不像教材刻意放慢。</span></div>
-        <div class="gc" style="background:linear-gradient(135deg,#f97316,#fb923c)"><b>🎭 情境記憶</b><span>把單字綁在劇情裡，比死背牢固 100 倍。</span></div>
-        <div class="gc" style="background:linear-gradient(135deg,#10b981,#34d399)"><b>🔁 可重複</b><span>聽不懂就倒回去反覆聽，壓力比真人對話小。</span></div>
-        <div class="gc" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)"><b>⚡ 口語表達</b><span>充滿縮約、省略、語尾助詞等教科書不教的內容。</span></div>
+        <div class="gc" style="background:linear-gradient(135deg,#2563eb,#3b82f6)"><b>🎬 情境記憶</b><span>把單字綁在生活／影集場景裡，比死背牢固 100 倍。</span></div>
+        <div class="gc" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)"><b>🗣️ 真實語速</b><span>先用 1× 聽懂，再用 1.5×、2× 把耳朵逼到「追得上」。</span></div>
+        <div class="gc" style="background:linear-gradient(135deg,#10b981,#34d399)"><b>🔁 可重複</b><span>每個字都能反覆播放跟讀，壓力比真人對話小很多。</span></div>
+        <div class="gc" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)"><b>⚡ 開口輸出</b><span>跟著唸出聲，聽力與口說一起長，不只是「看得懂」。</span></div>
       </div>
 
       <h3 class="sub2">核心方法：變速跟讀（Shadowing）</h3>
@@ -196,32 +174,28 @@
           <div class="spgrp"><span class="splab">1.5×</span><span class="dot done"></span><span class="dot done"></span><span class="dot done"></span></div>
           <div class="spgrp"><span class="splab">2×</span><span class="dot done"></span><span class="dot done"></span><span class="dot done"></span></div>
         </div>
-        <div class="note tip"><span class="ico">💡</span><span><b>為什麼 1.5× 和 2× 要各聽三次？</b>第一次抓節奏、第二次嘗試開口跟上、第三次完整跟讀。用比正常更快的速度練，回到真實語速時就會覺得「變慢了、聽得超清楚」。</span></div>
+        <div class="note tip"><span class="ico">💡</span><span><b>為什麼 1.5× 和 2× 各聽三次？</b>第一次抓節奏、第二次小聲跟、第三次完整大聲跟讀。用比正常更快的速度練，回到真實語速時就會覺得「變慢、超清楚」。</span></div>
       </div>
 
-      <div class="note warn"><span class="ico">⚠️</span><span>只「看字幕追劇」聽力不會進步，因為大腦會自動忽略聲音、只讀文字。一定要<b>開口跟讀</b>，聽力＋口說才會一起長。</span></div>
-      <div class="note blue"><span class="ico">🎯</span><span>這份工具教你把「追劇時間」變成「聽力訓練時間」：<b>今日單字</b>先看懂 →「<b>情境應用</b>」整段跟讀 →「<b>速度練習</b>」變速狂練 →「<b>自我檢測</b>」驗收。</span></div>
+      <div class="note warn"><span class="ico">⚠️</span><span>只「看字幕追劇」聽力不會進步，大腦會自動忽略聲音、只讀文字。一定要<b>開口跟讀</b>，聽力＋口說才會一起成長。</span></div>
+      <div class="note blue"><span class="ico">🎯</span><span>用法：<b>今日單字</b>先看懂 →「<b>情境應用</b>」整段跟讀 →「<b>速度練習</b>」變速狂練 →「<b>自我檢測</b>」驗收。每天選一個 Day，持續 20 天。</span></div>
     </section>
 
-    <!-- WORDS -->
     <section class="panel" id="p-words">
       <h2 class="sec" id="wordsTitle">今日單字</h2>
       <div class="toolbar">
-        <span class="chip on" data-k="romaji">顯示羅馬拼音</span>
         <span class="chip" data-k="hidecn">遮住中文（自測）</span>
       </div>
-      <div class="note blue" style="margin-top:0"><span class="ico">🔊</span><span>點每個字的 <b>🔊</b> 聽一次（正常速）；點 <b>🎯</b> 把這個字丟進「速度練習」做完整變速跟讀。</span></div>
+      <div class="note blue" style="margin-top:0"><span class="ico">🔊</span><span>點 <b>🔊</b> 聽一次（正常速）；點 <b>🎯</b> 把這個字丟進「速度練習」做完整變速跟讀。</span></div>
       <div id="wordsBody"></div>
     </section>
 
-    <!-- SCENE -->
     <section class="panel" id="p-scene">
       <h2 class="sec">情境應用：整段跟讀</h2>
-      <p class="small" style="margin-top:-6px">模擬一部日常日劇的 10 個場景。選一個場景，把裡面所有例句連起來跟讀，像在演對手戲。</p>
+      <p class="small" style="margin-top:-6px">把每個場景裡的例句連起來跟讀，像在演對手戲。</p>
       <div id="sceneBody"></div>
     </section>
 
-    <!-- DRILL -->
     <section class="panel" id="p-drill">
       <h2 class="sec">速度練習（變速跟讀）</h2>
       <div class="toolbar">
@@ -230,14 +204,11 @@
       </div>
       <div class="stage">
         <div class="bigjp" id="dJp">—</div>
-        <div class="bigkr" id="dKr"></div>
         <div class="bigmean" id="dMean"></div>
         <div class="bigex" id="dEx" style="display:none"></div>
         <div class="bigexc" id="dExc" style="display:none"></div>
         <div class="counter" id="dCount"></div>
-
         <div class="speedrow" style="justify-content:center" id="dDots"></div>
-
         <button class="btn lg block" id="dPlay">▶ 開始跟讀（1× → 1.5×3 → 2×3）</button>
         <div class="nav">
           <button class="btn ghost" id="dPrev">← 上一個</button>
@@ -245,34 +216,20 @@
           <button class="btn ghost" id="dNext">下一個 →</button>
         </div>
       </div>
-      <div class="note tip"><span class="ico">🎧</span><span>一句播完共 <b>7 次</b>（1×一次、1.5×三次、2×三次）。建議：1× 時專心聽，1.5× 開始小聲跟，2× 大聲完整跟讀。</span></div>
-      <div class="note warn" id="ttsWarn" style="display:none"><span class="ico">⚠️</span><span>這個瀏覽器可能沒有日文語音。建議用手機/電腦的 <b>Chrome</b> 或 <b>Safari</b> 開啟，並確認系統有安裝日文語音。</span></div>
+      <div class="note tip"><span class="ico">🎧</span><span>一句播完共 <b>7 次</b>（1×一次、1.5×三次、2×三次）。1× 時專心聽，1.5× 開始小聲跟，2× 大聲完整跟讀。</span></div>
+      <div class="note warn" id="ttsWarn" style="display:none"><span class="ico">⚠️</span><span>這個瀏覽器可能沒有英文語音。建議用 <b>Chrome</b> 或 <b>Safari</b> 開啟。</span></div>
     </section>
 
-    <!-- PLAN -->
     <section class="panel" id="p-plan">
       <h2 class="sec">每天一小時：這樣分配</h2>
-      <div class="note tip" style="margin-top:0"><span class="ico">⏱️</span><span><b>核心理念：「每天一小時，勝過偶爾一整天」</b>。重點不是一次學多少，而是每天持續接觸。</span></div>
-      <div class="card">
-        <div class="row" style="justify-content:space-between"><b>① 看懂今日 200 字</b><span class="small">15 分</span></div>
-        <p class="small" style="margin:4px 0 0">在「今日單字」快速掃過，不用背，先認臉、知道意思。</p>
-      </div>
-      <div class="card">
-        <div class="row" style="justify-content:space-between"><b>② 情境整段跟讀</b><span class="small">20 分</span></div>
-        <p class="small" style="margin:4px 0 0">在「情境應用」挑 4～5 個場景，連著句子跟讀，感受真實對話。</p>
-      </div>
-      <div class="card">
-        <div class="row" style="justify-content:space-between"><b>③ 變速狂練</b><span class="small">15 分</span></div>
-        <p class="small" style="margin:4px 0 0">在「速度練習」開自動連播，用 1×→1.5×→2× 把今天覺得卡的字練熟。</p>
-      </div>
-      <div class="card">
-        <div class="row" style="justify-content:space-between"><b>④ 自我檢測＋複習</b><span class="small">10 分</span></div>
-        <p class="small" style="margin:4px 0 0">做「自我檢測」，把答錯的字回「今日單字」遮中文再測一次。</p>
-      </div>
+      <div class="note tip" style="margin-top:0"><span class="ico">⏱️</span><span><b>核心理念：「每天一小時，勝過偶爾一整天」。</b>重點不是一次學多少，而是每天持續接觸，20 天養成習慣。</span></div>
+      <div class="card"><div class="row" style="justify-content:space-between"><b>① 看懂今日 200 字</b><span class="small">15 分</span></div><p class="small" style="margin:4px 0 0">在「今日單字」快速掃過，先認臉、知道意思，不用硬背。</p></div>
+      <div class="card"><div class="row" style="justify-content:space-between"><b>② 情境整段跟讀</b><span class="small">20 分</span></div><p class="small" style="margin:4px 0 0">在「情境應用」挑 4～5 個場景，連著例句跟讀。</p></div>
+      <div class="card"><div class="row" style="justify-content:space-between"><b>③ 變速狂練</b><span class="small">15 分</span></div><p class="small" style="margin:4px 0 0">在「速度練習」開自動連播，用 1×→1.5×→2× 把卡住的字練熟。</p></div>
+      <div class="card"><div class="row" style="justify-content:space-between"><b>④ 自我檢測＋複習</b><span class="small">10 分</span></div><p class="small" style="margin:4px 0 0">做「自我檢測」，答錯的回「今日單字」遮中文再測一次。</p></div>
       <div class="note blue"><span class="ico">📈</span><span>隔天開始前，先用 2× 快速複習昨天的字（約 5 分鐘），再進新的一天。這就是「間隔複習」。</span></div>
     </section>
 
-    <!-- QUIZ -->
     <section class="panel" id="p-quiz">
       <h2 class="sec">自我檢測</h2>
       <p class="small" style="margin-top:-6px">從今天的 200 字隨機抽 10 題，選出正確的中文意思。</p>
@@ -282,104 +239,93 @@
     </section>
   </main>
 
-  <div class="foot">
-    <button class="btn ghost" id="stopBtn">⏹ 停止播放</button>
-  </div>
+  <div class="foot"><button class="btn ghost" id="stopBtn">⏹ 停止播放</button></div>
 </div>
 
 <script src="data.js"></script>
 <script>
-/* ========== 全域狀態 ========== */
-const DAY = DAYS[0];
-const ALL = [];                       // 攤平成單一單字陣列
-DAY.scenarios.forEach((s,si)=> s.words.forEach((w,wi)=> ALL.push({...w, scn:s.name, scnCn:s.cn, color:s.color, si, wi})));
-document.getElementById('heroCount').textContent = ALL.length + ' 字';
-document.getElementById('wordsTitle').textContent = 'Day ' + DAY.day + '：' + DAY.title;
+/* ========== 載入資料 ========== */
+DAYS.sort((a,b)=>a.day-b.day);
+let curDay = 0;                 // DAYS 索引
+let ALL = [];                   // 當天攤平的單字陣列
 
-/* ========== 語音引擎 ========== */
-const SPEED_PLAN = [ {rate:1,reps:1}, {rate:1.5,reps:3}, {rate:2,reps:3} ];
-let jaVoice = null;
-function pickVoice(){
-  const vs = speechSynthesis.getVoices();
-  jaVoice = vs.find(v=>/ja(-|_)?JP/i.test(v.lang)) || vs.find(v=>/^ja/i.test(v.lang)) || null;
-  if(!vs.length || !jaVoice){ /* 可能尚未載入或無日文語音 */ }
+function flatten(){
+  ALL=[]; const d=DAYS[curDay];
+  d.scenarios.forEach((s,si)=> s.words.forEach((w,wi)=> ALL.push({...w, scn:s.name, scnCn:s.cn, color:s.color, si, wi})));
 }
-if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+
+/* ---- Day 選單 ---- */
+const daySel=document.getElementById('daySel');
+DAYS.forEach((d,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=`Day ${d.day}　${d.title}`; daySel.appendChild(o); });
+daySel.onchange=()=>{ curDay=+daySel.value; stopAll(); dIdx=0; loadDay(); };
+
+function loadDay(){
+  const d=DAYS[curDay]; flatten();
+  document.getElementById('wordsTitle').textContent = `Day ${d.day}：${d.title}`;
+  document.getElementById('heroDay').textContent = `Day ${d.day} / 共 ${DAYS.length} 天`;
+  document.getElementById('heroCount').textContent = ALL.length+' 字';
+  document.getElementById('heroBar').style.width = Math.round((curDay+1)/DAYS.length*100)+'%';
+  renderWords(); renderScene(); renderDrill(); buildQuiz();
+}
+
+/* ========== 語音引擎（英文 TTS） ========== */
+const SPEED_PLAN = [ {rate:1,reps:1}, {rate:1.5,reps:3}, {rate:2,reps:3} ];
+let enVoice=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices();
+  enVoice = vs.find(v=>/en(-|_)US/i.test(v.lang)) || vs.find(v=>/^en/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 else { document.getElementById('ttsWarn').style.display='flex'; }
 
-let activeQueue = 0;   // 用來取消舊序列
-function stopAll(){ activeQueue++; try{ speechSynthesis.cancel(); }catch(e){} }
-document.getElementById('stopBtn').onclick = stopAll;
+let activeQueue=0;
+function stopAll(){ activeQueue++; try{speechSynthesis.cancel();}catch(e){} }
+document.getElementById('stopBtn').onclick=stopAll;
 
-function utter(text, rate){
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang='ja-JP'; u.rate=rate; u.pitch=1;
-  if(jaVoice) u.voice=jaVoice;
-  return u;
-}
-// 單次播放（預覽，正常速）
-function playOnce(text){ stopAll(); try{ speechSynthesis.speak(utter(text,1)); }catch(e){} }
+function utter(text,rate){ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=rate; u.pitch=1; if(enVoice)u.voice=enVoice; return u; }
+function playOnce(text){ stopAll(); try{speechSynthesis.speak(utter(text,1));}catch(e){} }
 
-// 完整變速序列：1× / 1.5×3 / 2×3 ；onStep(index,total,rate) 進度回呼
-function playShadow(text, onStep, onDone){
-  stopAll();
-  const myId = activeQueue;
-  const steps=[];
-  SPEED_PLAN.forEach(p=>{ for(let i=0;i<p.reps;i++) steps.push(p.rate); });
+function playShadow(text,onStep,onDone){
+  stopAll(); const myId=activeQueue; const steps=[];
+  SPEED_PLAN.forEach(p=>{for(let i=0;i<p.reps;i++)steps.push(p.rate);});
   let i=0;
   function next(){
-    if(myId!==activeQueue) return;           // 已被新序列/停止取消
-    if(i>=steps.length){ onStep && onStep(-1,steps.length,null); onDone && onDone(); return; }
-    const rate=steps[i];
-    onStep && onStep(i,steps.length,rate);
+    if(myId!==activeQueue) return;
+    if(i>=steps.length){ onStep&&onStep(-1,steps.length,null); onDone&&onDone(); return; }
+    const rate=steps[i]; onStep&&onStep(i,steps.length,rate);
     const u=utter(text,rate);
-    u.onend=()=>{ if(myId!==activeQueue) return; i++; setTimeout(next, 260); };
-    u.onerror=()=>{ if(myId!==activeQueue) return; i++; setTimeout(next, 120); };
-    try{ speechSynthesis.speak(u); }catch(e){ i++; setTimeout(next,120); }
+    u.onend=()=>{ if(myId!==activeQueue)return; i++; setTimeout(next,260); };
+    u.onerror=()=>{ if(myId!==activeQueue)return; i++; setTimeout(next,120); };
+    try{speechSynthesis.speak(u);}catch(e){ i++; setTimeout(next,120); }
   }
-  next();
-  return myId;
+  next(); return myId;
 }
 
-/* ========== 分頁切換 ========== */
+/* ========== 分頁 ========== */
 const tabs=document.getElementById('tabs');
-tabs.addEventListener('click',e=>{
-  const b=e.target.closest('.tab'); if(!b) return;
-  stopAll();
+tabs.addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(!b)return; stopAll();
   [...tabs.children].forEach(t=>t.classList.toggle('active',t===b));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
-  document.getElementById('p-'+b.dataset.t).classList.add('show');
-  window.scrollTo({top:0,behavior:'smooth'});
-});
+  document.getElementById('p-'+b.dataset.t).classList.add('show'); window.scrollTo({top:0,behavior:'smooth'}); });
 
 /* ========== 今日單字 ========== */
-let showRomaji=true, hideCn=false;
+let hideCn=false;
 function renderWords(){
-  const box=document.getElementById('wordsBody'); box.innerHTML='';
-  box.classList.toggle('hide-cn',hideCn);
-  DAY.scenarios.forEach((s,si)=>{
+  const box=document.getElementById('wordsBody'); box.innerHTML=''; box.classList.toggle('hide-cn',hideCn);
+  DAYS[curDay].scenarios.forEach((s,si)=>{
     const head=document.createElement('div'); head.className='scn-head';
     head.innerHTML=`<div class="scn-title"><span class="scn-emoji" style="background:${s.color}">${s.emoji}</span>
-       <span>${s.name}<br><span class="small" style="font-weight:600">${s.cn}</span></span></div>
-       <span class="scn-count">${s.words.length} 字 ⌄</span>`;
+      <span>${s.name}<br><span class="small" style="font-weight:600">${s.cn}</span></span></div>
+      <span class="scn-count">${s.words.length} 字 ⌄</span>`;
     const list=document.createElement('div'); list.className='wlist';
     s.words.forEach((w,wi)=>{
       const el=document.createElement('div'); el.className='word';
-      el.innerHTML=`
-        <div class="main">
-          <div class="jp">${w.w}</div>
-          <div class="kr">${w.k}${showRomaji?' ・ '+w.r:''}</div>
-          <div class="mean">${w.m}</div>
-          <div class="ex">${w.e}</div>
-          <div class="exc">${w.ec}</div>
-        </div>
-        <div class="pbtns">
-          <button class="mini" title="聽一次">🔊</button>
-          <button class="mini go" title="丟進速度練習">🎯</button>
-        </div>`;
+      el.innerHTML=`<div class="main"><div class="en">${w.w}</div><div class="mean">${w.m}</div>
+        <div class="ex">${w.e}</div><div class="exc">${w.ec}</div></div>
+        <div class="pbtns"><button class="mini" title="聽一次">🔊</button><button class="mini go" title="丟進速度練習">🎯</button></div>`;
       const btns=el.querySelectorAll('.mini');
-      btns[0].onclick=()=>playOnce(w.k);
-      btns[1].onclick=()=>{ gotoDrill(ALL.findIndex(a=>a.si===si&&a.wi===wi)); };
+      btns[0].onclick=()=>playOnce(w.w);
+      btns[1].onclick=()=>gotoDrill(ALL.findIndex(a=>a.si===si&&a.wi===wi));
       list.appendChild(el);
     });
     head.onclick=()=>{ const open=list.style.display!=='none'; list.style.display=open?'none':'flex';
@@ -387,143 +333,86 @@ function renderWords(){
     box.appendChild(head); box.appendChild(list);
   });
 }
-document.querySelectorAll('#p-words .chip').forEach(c=>{
-  c.onclick=()=>{
-    if(c.dataset.k==='romaji'){ showRomaji=!showRomaji; c.classList.toggle('on',showRomaji); }
-    if(c.dataset.k==='hidecn'){ hideCn=!hideCn; c.classList.toggle('on',hideCn); }
-    renderWords();
-  };
-});
+document.querySelectorAll('#p-words .chip').forEach(c=>c.onclick=()=>{ if(c.dataset.k==='hidecn'){hideCn=!hideCn;c.classList.toggle('on',hideCn);renderWords();} });
 
 /* ========== 情境應用 ========== */
 function renderScene(){
   const box=document.getElementById('sceneBody'); box.innerHTML='';
-  DAY.scenarios.forEach((s,si)=>{
+  DAYS[curDay].scenarios.forEach(s=>{
     const c=document.createElement('div'); c.className='card';
     c.innerHTML=`<div class="scn-title" style="margin-bottom:6px"><span class="scn-emoji" style="background:${s.color}">${s.emoji}</span>
       <span>${s.name} <span class="small" style="font-weight:600">· ${s.cn}</span></span></div>
       <p class="small" style="margin:0 0 10px">${s.words.length} 句例句</p>
-      <div class="row">
-        <button class="btn ghost bprev">🔊 整段聽一次</button>
-        <button class="btn bshadow">🎯 整段變速跟讀</button>
-      </div>
+      <div class="row"><button class="btn ghost bprev">🔊 整段聽一次</button><button class="btn bshadow">🎯 整段變速跟讀</button></div>
       <div class="small" style="margin-top:8px;display:none" data-prog></div>`;
     const prog=c.querySelector('[data-prog]');
-    c.querySelector('.bprev').onclick=()=>playList(s.words.map(w=>w.e), prog, false);
-    c.querySelector('.bshadow').onclick=()=>playList(s.words.map(w=>w.e), prog, true);
+    c.querySelector('.bprev').onclick=()=>playList(s.words.map(w=>w.e),prog,false);
+    c.querySelector('.bshadow').onclick=()=>playList(s.words.map(w=>w.e),prog,true);
     box.appendChild(c);
   });
 }
-// 連續播放一串句子；shadow=true 時每句都跑完整變速
-function playList(texts, progEl, shadow){
-  stopAll(); const myId=activeQueue; let idx=0;
-  progEl.style.display='block';
-  function nextSentence(){
-    if(myId!==activeQueue){ progEl.style.display='none'; return; }
-    if(idx>=texts.length){ progEl.textContent='✅ 跟讀完成！'; return; }
+function playList(texts,progEl,shadow){
+  stopAll(); const myId=activeQueue; let idx=0; progEl.style.display='block';
+  function nextS(){
+    if(myId!==activeQueue){progEl.style.display='none';return;}
+    if(idx>=texts.length){progEl.textContent='✅ 跟讀完成！';return;}
     progEl.textContent=`播放中… 第 ${idx+1} / ${texts.length} 句`;
-    if(shadow){
-      playShadow(texts[idx], (i,t,r)=>{ if(r) progEl.textContent=`第 ${idx+1}/${texts.length} 句　${r}×　(${i+1}/${t})`; },
-        ()=>{ if(myId!==activeQueue) return; idx++; setTimeout(nextSentence,350); });
-    } else {
-      const u=utter(texts[idx],1);
-      u.onend=()=>{ if(myId!==activeQueue) return; idx++; setTimeout(nextSentence,320); };
-      u.onerror=()=>{ if(myId!==activeQueue) return; idx++; setTimeout(nextSentence,150); };
-      try{ speechSynthesis.speak(u);}catch(e){ idx++; setTimeout(nextSentence,150);}
-    }
+    if(shadow){ playShadow(texts[idx],(i,t,r)=>{if(r)progEl.textContent=`第 ${idx+1}/${texts.length} 句　${r}×　(${i+1}/${t})`;},
+        ()=>{ if(myId!==activeQueue)return; idx++; setTimeout(nextS,350); }); }
+    else { const u=utter(texts[idx],1); u.onend=()=>{if(myId!==activeQueue)return;idx++;setTimeout(nextS,300);};
+        u.onerror=()=>{if(myId!==activeQueue)return;idx++;setTimeout(nextS,150);}; try{speechSynthesis.speak(u);}catch(e){idx++;setTimeout(nextS,150);} }
   }
-  nextSentence();
+  nextS();
 }
 
 /* ========== 速度練習 ========== */
 let dIdx=0, dMode='word', dAuto=false;
-const dEls={jp:document.getElementById('dJp'),kr:document.getElementById('dKr'),mean:document.getElementById('dMean'),
-  ex:document.getElementById('dEx'),exc:document.getElementById('dExc'),count:document.getElementById('dCount'),
-  dots:document.getElementById('dDots')};
-function buildDots(){
-  dEls.dots.innerHTML='';
-  SPEED_PLAN.forEach(p=>{
-    const g=document.createElement('div'); g.className='spgrp';
-    g.innerHTML=`<span class="splab">${p.rate}×</span>`;
-    for(let i=0;i<p.reps;i++){ const d=document.createElement('span'); d.className='dot'; g.appendChild(d); }
-    dEls.dots.appendChild(g);
-  });
-}
-function setDots(activeIdx){
-  const dots=dEls.dots.querySelectorAll('.dot');
-  dots.forEach((d,i)=>{ d.classList.remove('on','done'); if(activeIdx<0){} else if(i<activeIdx)d.classList.add('done'); else if(i===activeIdx)d.classList.add('on'); });
-}
-function renderDrill(){
-  const w=ALL[dIdx];
-  dEls.jp.textContent=w.w; dEls.kr.textContent=w.k+' ・ '+w.r; dEls.mean.textContent=w.m;
-  const showEx=dMode==='ex';
-  dEls.ex.style.display=showEx?'block':'none'; dEls.exc.style.display=showEx?'block':'none';
-  dEls.ex.textContent=w.e; dEls.exc.textContent=w.ec;
-  dEls.count.textContent=`${w.scnCn}　${dIdx+1} / ${ALL.length}`;
-  buildDots();
-}
-function playDrill(){
-  const w=ALL[dIdx]; const text = dMode==='ex'? w.e : w.k;
+const dEls={jp:document.getElementById('dJp'),mean:document.getElementById('dMean'),ex:document.getElementById('dEx'),
+  exc:document.getElementById('dExc'),count:document.getElementById('dCount'),dots:document.getElementById('dDots')};
+function buildDots(){ dEls.dots.innerHTML='';
+  SPEED_PLAN.forEach(p=>{ const g=document.createElement('div'); g.className='spgrp'; g.innerHTML=`<span class="splab">${p.rate}×</span>`;
+    for(let i=0;i<p.reps;i++){const d=document.createElement('span');d.className='dot';g.appendChild(d);} dEls.dots.appendChild(g); }); }
+function setDots(a){ dEls.dots.querySelectorAll('.dot').forEach((d,i)=>{ d.classList.remove('on','done'); if(a<0){}else if(i<a)d.classList.add('done');else if(i===a)d.classList.add('on'); }); }
+function renderDrill(){ const w=ALL[dIdx]; if(!w)return;
+  dEls.jp.textContent=w.w; dEls.mean.textContent=w.m;
+  const showEx=dMode==='ex'; dEls.ex.style.display=showEx?'block':'none'; dEls.exc.style.display=showEx?'block':'none';
+  dEls.ex.textContent=w.e; dEls.exc.textContent=w.ec; dEls.count.textContent=`${w.scnCn}　${dIdx+1} / ${ALL.length}`; buildDots(); }
+function playDrill(){ const w=ALL[dIdx]; const text=dMode==='ex'?w.e:w.w;
   const btn=document.getElementById('dPlay'); btn.textContent='🔊 播放中…'; btn.disabled=true;
-  playShadow(text,(i)=>setDots(i),()=>{
-    setDots(-1); btn.textContent='▶ 再播一次（1×→1.5×3→2×3）'; btn.disabled=false;
-    if(dAuto){ if(dIdx<ALL.length-1){ dIdx++; renderDrill(); setTimeout(playDrill,500);} }
-  });
-}
-function gotoDrill(i){
-  dIdx=Math.max(0,i);
-  document.querySelector('.tab[data-t="drill"]').click();
-  renderDrill(); setTimeout(playDrill,250);
-}
+  playShadow(text,i=>setDots(i),()=>{ setDots(-1); btn.textContent='▶ 再播一次（1×→1.5×3→2×3）'; btn.disabled=false;
+    if(dAuto&&dIdx<ALL.length-1){dIdx++;renderDrill();setTimeout(playDrill,500);} }); }
+function gotoDrill(i){ dIdx=Math.max(0,i); document.querySelector('.tab[data-t="drill"]').click(); renderDrill(); setTimeout(playDrill,250); }
 document.getElementById('dPlay').onclick=playDrill;
-document.getElementById('dPrev').onclick=()=>{ stopAll(); dIdx=(dIdx-1+ALL.length)%ALL.length; renderDrill(); };
-document.getElementById('dNext').onclick=()=>{ stopAll(); dIdx=(dIdx+1)%ALL.length; renderDrill(); };
-document.getElementById('dAuto').onclick=(e)=>{ dAuto=!dAuto; e.target.textContent='自動連播：'+(dAuto?'開':'關'); e.target.classList.toggle('on',dAuto); };
-document.querySelectorAll('#p-drill .chip').forEach(c=>c.onclick=()=>{
-  document.querySelectorAll('#p-drill .chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
-  dMode=c.dataset.m; renderDrill();
-});
+document.getElementById('dPrev').onclick=()=>{stopAll();dIdx=(dIdx-1+ALL.length)%ALL.length;renderDrill();};
+document.getElementById('dNext').onclick=()=>{stopAll();dIdx=(dIdx+1)%ALL.length;renderDrill();};
+document.getElementById('dAuto').onclick=e=>{dAuto=!dAuto;e.target.textContent='自動連播：'+(dAuto?'開':'關');e.target.classList.toggle('on',dAuto);};
+document.querySelectorAll('#p-drill .chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('#p-drill .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');dMode=c.dataset.m;renderDrill();});
 
 /* ========== 自我檢測 ========== */
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
 function buildQuiz(){
   const box=document.getElementById('quizBody'); box.innerHTML=''; document.getElementById('scoreBox').innerHTML='';
-  const pick=shuffle(ALL).slice(0,10); let answered=0, correct=0;
+  const pick=shuffle(ALL).slice(0,10); let answered=0,correct=0;
   pick.forEach((w,qi)=>{
-    const wrong=shuffle(ALL.filter(x=>x.m!==w.m)).slice(0,3).map(x=>x.m);
-    const opts=shuffle([w.m,...wrong]);
+    const wrong=shuffle(ALL.filter(x=>x.m!==w.m)).slice(0,3).map(x=>x.m); const opts=shuffle([w.m,...wrong]);
     const q=document.createElement('div'); q.className='q';
-    q.innerHTML=`<div class="qq">Q${qi+1}.「${w.w}」<span class="small">(${w.k})</span> 的意思是？
-       <button class="mini" style="display:inline-block;margin-left:6px">🔊</button></div><div class="opts"></div>`;
-    q.querySelector('.mini').onclick=()=>playOnce(w.k);
-    const og=q.querySelector('.opts');
-    opts.forEach(o=>{
-      const b=document.createElement('div'); b.className='opt'; b.textContent=o;
-      b.onclick=()=>{
-        if(q.dataset.done) return; q.dataset.done=1; answered++;
-        if(o===w.m){ b.classList.add('correct'); correct++; }
-        else { b.classList.add('wrong'); [...og.children].forEach(x=>{if(x.textContent===w.m)x.classList.add('correct');}); }
-        if(answered===pick.length){ document.getElementById('scoreBox').innerHTML=
-          `<div class="scorebox">得分：${correct} / ${pick.length} ${correct>=8?'🎉':correct>=5?'💪':'📖'}</div>`; }
-      };
-      og.appendChild(b);
-    });
+    q.innerHTML=`<div class="qq">Q${qi+1}. “${w.w}” 的意思是？<button class="mini" style="display:inline-block;margin-left:6px">🔊</button></div><div class="opts"></div>`;
+    q.querySelector('.mini').onclick=()=>playOnce(w.w); const og=q.querySelector('.opts');
+    opts.forEach(o=>{ const b=document.createElement('div'); b.className='opt'; b.textContent=o;
+      b.onclick=()=>{ if(q.dataset.done)return; q.dataset.done=1; answered++;
+        if(o===w.m){b.classList.add('correct');correct++;} else {b.classList.add('wrong');[...og.children].forEach(x=>{if(x.textContent===w.m)x.classList.add('correct');});}
+        if(answered===pick.length){document.getElementById('scoreBox').innerHTML=`<div class="scorebox">得分：${correct} / ${pick.length} ${correct>=8?'🎉':correct>=5?'💪':'📖'}</div>`;} };
+      og.appendChild(b); });
     box.appendChild(q);
   });
 }
 document.getElementById('quizNew').onclick=buildQuiz;
 
-/* ========== 主題切換 ========== */
+/* ========== 主題 ========== */
 const themeBtn=document.getElementById('themeBtn');
-(function initTheme(){ try{ const t=localStorage.getItem('jtheme'); if(t){ document.documentElement.setAttribute('data-theme',t); themeBtn.textContent=t==='dark'?'☀️':'🌙'; } }catch(e){} })();
-themeBtn.onclick=()=>{ const cur=document.documentElement.getAttribute('data-theme');
-  const dark = document.matchMedia('(prefers-color-scheme: dark)').matches;
-  const next = cur ? (cur==='dark'?'light':'dark') : (dark?'light':'dark');
-  document.documentElement.setAttribute('data-theme',next); themeBtn.textContent=next==='dark'?'☀️':'🌙';
-  try{ localStorage.setItem('jtheme',next);}catch(e){} };
+(function(){try{const t=localStorage.getItem('etheme');if(t){document.documentElement.setAttribute('data-theme',t);themeBtn.textContent=t==='dark'?'☀️':'🌙';}}catch(e){}})();
+themeBtn.onclick=()=>{const cur=document.documentElement.getAttribute('data-theme');const dark=matchMedia('(prefers-color-scheme: dark)').matches;
+  const next=cur?(cur==='dark'?'light':'dark'):(dark?'light':'dark');document.documentElement.setAttribute('data-theme',next);themeBtn.textContent=next==='dark'?'☀️':'🌙';try{localStorage.setItem('etheme',next);}catch(e){}};
 
-/* ========== 初始化 ========== */
-renderWords(); renderScene(); renderDrill(); buildQuiz();
-</script>
-</body>
-</html>
+/* ========== 啟動 ========== */
+loadDay();
